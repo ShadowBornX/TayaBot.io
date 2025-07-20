@@ -2,20 +2,7 @@
 <html>
 
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="/">
+  <base href="/TayaBot.io/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -24,7 +11,7 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="frontend">
+  <meta name="apple-mobile-web-app-title" content="Taya Bot">
   <link rel="apple-touch-icon" href="icons/chincha_logo.png">
 
   <!-- Favicon -->
@@ -32,9 +19,251 @@
 
   <title>Taya Bot</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    #download-apk-btn {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 1000;
+      width: 90%;
+      max-width: 320px;
+      height: 48px;
+      background: linear-gradient(135deg, #E53E3E, #C53030);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(229, 62, 62, 0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    #download-apk-btn.show {
+      display: flex;
+      animation: slideUp 0.5s ease-out forwards;
+    }
+
+    #download-apk-btn.minimized {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      left: 50px;
+      bottom: 80px;
+      transform: none;
+      gap: 0;
+      font-size: 0;
+      box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    #download-apk-btn:hover {
+      background: linear-gradient(135deg, #C53030, #B91C1C);
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 10px 22px rgba(229, 62, 62, 0.35);
+    }
+
+    #download-apk-btn.minimized:hover {
+      background: linear-gradient(135deg, #C53030, #B91C1C);
+      transform: translateY(-2px);
+    }
+
+    .download-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      animation: bounce 2s infinite;
+      transition: all 0.3s ease;
+    }
+
+    #download-apk-btn.minimized .download-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .download-text {
+      transition: opacity 0.3s ease;
+    }
+
+    #download-apk-btn.minimized .download-text {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-3px);
+      }
+
+      60% {
+        transform: translateY(-1px);
+      }
+    }
+
+    /* Minimizar button - now separate */
+    .minimize-btn {
+      position: fixed;
+      right: 24px;
+      bottom: 120px;
+      width: 28px;
+      height: 28px;
+      background: rgba(34, 34, 34, 0.3);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      z-index: 1001;
+    }
+
+    .minimize-btn.show {
+      display: flex;
+    }
+
+    .minimize-icon {
+      width: 14px;
+      height: 14px;
+      fill: white;
+      opacity: 0.9;
+    }
+
+    .minimize-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-icon svg,
+    .minimize-icon {
+      width: 100%;
+      height: 100%;
+      fill: white;
+    }
+
+    /* Visible solo en móvil */
+    @media (max-width: 768px) {
+
+      #download-apk-btn,
+      .minimize-btn {
+        display: none;
+      }
+
+      #download-apk-btn.show,
+      .minimize-btn.show {
+        display: flex;
+      }
+    }
+
+    /* Oculto en escritorio */
+    @media (min-width: 769px) {
+
+      #download-apk-btn,
+      .minimize-btn {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- Botón principal de descarga -->
+  <button id="download-apk-btn">
+    <span class="download-icon">
+      <svg viewBox="0 0 24 24">
+        <path
+          d="M12 15.575c-.183 0-.358-.067-.495-.192L5.495 9.375c-.3-.275-.3-.708 0-.983s.742-.275 1.042 0L11 12.683V3.5c0-.383.325-.692.717-.692s.717.309.717.692v9.183l4.463-4.291c.3-.275.742-.275 1.042 0s.3.708 0 .983l-6.01 6.008c-.137.125-.312.192-.495.192Z" />
+        <path
+          d="M18.5 15.5c-.392 0-.717.309-.717.692v3.116c0 .383-.325.692-.717.692H6.934c-.392 0-.717-.309-.717-.692v-3.116c0-.383-.325-.692-.717-.692s-.717.309-.717.692v3.116c0 1.15.975 2.077 2.151 2.077h10.132c1.176 0 2.151-.927 2.151-2.077v-3.116c0-.383-.325-.692-.717-.692Z" />
+      </svg>
+    </span>
+    <span class="download-text">Descargar TayaBot</span>
+  </button>
+
+  <!-- Botón minimizar (separado) -->
+  <button class="minimize-btn" id="minimize-btn" onclick="minimizeButton(event)" type="button" aria-label="Minimizar">
+    <svg class="minimize-icon" viewBox="0 0 24 24">
+      <path d="M19 13H5v-2h14v2z" />
+    </svg>
+  </button>
+
+  <script>
+    let isMinimized = false;
+
+    // Mostrar los botones luego de 10 segundos solo en móvil
+    setTimeout(function () {
+      if (window.innerWidth <= 768) {
+        document.getElementById('download-apk-btn').classList.add('show');
+        document.getElementById('minimize-btn').classList.add('show');
+      }
+    }, 10000);
+
+    function minimizeButton(event) {
+      event.stopPropagation();
+
+      const btn = document.getElementById('download-apk-btn');
+      const minimize = document.getElementById('minimize-btn');
+
+      if (!isMinimized) {
+        btn.classList.add('minimized');
+        minimize.style.bottom = '128px'; // reposition for minimized
+        minimize.style.left = '48px'; // keep it in the corner
+        minimize.style.right = ''; // reset right position
+        isMinimized = true;
+      } else {
+        btn.classList.remove('minimized');
+        minimize.style.bottom = '120px'; // reposition for normal}
+        minimize.style.right = '24px'; // keep it in the corner
+        minimize.style.left = ''; // reset left position
+        isMinimized = false;
+      }
+    }
+
+    function downloadAPK(event) {
+      if (!isMinimized) {
+        const link = document.createElement('a');
+        link.href = 'TayaBot.apk';
+        link.download = 'TayaBot.apk';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        minimizeButton(event);
+      }
+    }
+
+    document.getElementById('download-apk-btn').addEventListener('click', downloadAPK);
+  </script>
+
+  <!-- Flutter -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 
